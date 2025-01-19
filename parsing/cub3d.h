@@ -19,6 +19,10 @@ typedef struct s_global
 	char			*ea;
 	char			*f;
 	char			*c;
+	char			*no_path;
+	char			*so_path;
+	char			*we_path;
+	char			*ea_path;
     int				no_flag;
 	int				so_flag;
 	int				we_flag;

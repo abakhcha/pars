@@ -3,22 +3,22 @@
 
 void	check_textures_extention(t_global *global)
 {
-	if (open(global->no, O_RDWR) == -1)
+	if (open(global->no_path, O_RDWR) == -1)
 	{
 		free_global(global);
 		error_print("Error\ncheck ur textures files\n");
 	}
-	else if (open(global->so, O_RDWR) == -1)
+	else if (open(global->so_path, O_RDWR) == -1)
 	{
 		free_global(global);
 		error_print("Error\ncheck ur textures files\n");
 	}
-	else if (open(global->we, O_RDWR) == -1)
+	else if (open(global->we_path, O_RDWR) == -1)
 	{
 		free_global(global);
 		error_print("Error\ncheck ur textures files\n");
 	}
-	else if (open(global->ea, O_RDWR) == -1)
+	else if (open(global->ea_path, O_RDWR) == -1)
 	{
 		free_global(global);
 		error_print("Error\ncheck ur textures files\n");
@@ -69,14 +69,32 @@ void check_extentions_format2(t_global *global)
 	ft_doublepointerfree(tmp);
 }
 
+void get_textures_path(t_global *global)
+{
+	char **tmp;
+	
+	tmp = ft_split(global->no, ' ');
+	global->no_path = ft_strdup(tmp[1]);
+	ft_doublepointerfree(tmp);
+	tmp = ft_split(global->so, ' ');
+	global->so_path = ft_strdup(tmp[1]);	
+	ft_doublepointerfree(tmp);
+	tmp = ft_split(global->ea, ' ');
+	global->ea_path = ft_strdup(tmp[1]);	
+	ft_doublepointerfree(tmp);
+	tmp = ft_split(global->we, ' ');
+	global->we_path = ft_strdup(tmp[1]);
+	ft_doublepointerfree(tmp);
+}
+
 void parse_first_part(t_global *global, int fd)
-{    
-    // int j = 0;
+{
 	global->map = fill_map(fd);
 	init(global);
 	get_infos_from_map(global->map, global);
 	check_extentions_format(global);
 	check_extentions_format2(global);
+	exit(1);
 	check_rgb_format(global);
 	check_rgb_format1(global);
 	store_rgb(global);
@@ -87,12 +105,7 @@ void parse_first_part(t_global *global, int fd)
     check_emptyline(global);
     check_walls(global);
     player_exists(global);
-	// check_for_textures_extension(global);
-	// check_textures_extention(global);
-	// exit(1);
-    // while(global->real_map[j])
-    // {
-    //     printf("%s\n",global->real_map[j]);
-    //     j++;
-    // }
+	check_for_textures_extension(global);
+	get_textures_path(global);
+	check_textures_extention(global);
 }

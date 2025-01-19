@@ -14,6 +14,14 @@ void free_global(t_global *global)
         free(global->we);
 	if(global->ea)
         free(global->ea);
+	if(global->no_path)
+        free(global->no_path);
+	if(global->so_path)
+        free(global->so_path);
+	if(global->we_path)
+        free(global->we_path);
+	if(global->ea_path)
+        free(global->ea_path);
 	if(global->f)
         free(global->f);
 	if(global->c)

@@ -1,5 +1,29 @@
 #include "cub3d.h"
 
+void get_infos_from_map2(char *tmp, t_global *global)
+{
+    if (ft_strncmp(tmp, "NO", 2) == 0)
+        (fill_elements(global, tmp, 1),free(tmp));
+    else if (ft_strncmp(tmp, "SO", 2) == 0)
+        (fill_elements(global, tmp, 2),free(tmp));
+    else if (ft_strncmp(tmp, "WE", 2) == 0)
+        (fill_elements(global, tmp, 3),free(tmp));
+    else if (ft_strncmp(tmp, "EA", 2) == 0)
+        (fill_elements(global, tmp, 4),free(tmp));
+    else if (ft_strncmp(tmp, "F", 1) == 0)
+        (fill_elements(global, tmp, 5),free(tmp));
+    else if (ft_strncmp(tmp, "C", 1) == 0)
+        (fill_elements(global, tmp, 6),free(tmp));
+    else if(ft_strlen(tmp) != 0)
+    {
+        free_global(global);
+        free(tmp);
+        error_print("Error\nmap file contains an error\n");
+    }
+    else
+        free(tmp);
+}
+
 void get_infos_from_map(char **str, t_global *global)
 {
     int flag;
@@ -16,40 +40,7 @@ void get_infos_from_map(char **str, t_global *global)
             break;
         }
         tmp = ft_strtrim(str[j]);
-        if (ft_strncmp(tmp, "NO", 2) == 0)
-        {
-            fill_elements(global, tmp, 1); 
-            free(tmp);
-        }
-        else if (ft_strncmp(tmp, "SO", 2) == 0)
-        {
-            fill_elements(global, tmp, 2); 
-            free(tmp);
-        }
-        else if (ft_strncmp(tmp, "WE", 2) == 0)
-        {
-            fill_elements(global, tmp, 3); 
-            free(tmp);
-        }
-        else if (ft_strncmp(tmp, "EA", 2) == 0)
-        {
-            fill_elements(global, tmp, 4); 
-            free(tmp);
-        }
-        else if (ft_strncmp(tmp, "F", 1) == 0)
-        {
-            fill_elements(global, tmp, 5); 
-            free(tmp);
-        }
-        else if (ft_strncmp(tmp, "C", 1) == 0)
-        {
-            fill_elements(global, tmp, 6);
-            free(tmp);
-        }
-        else if(ft_strlen(tmp) != 0)
-            error_print("Error\nchek the lines between elements");
-        else
-            free(tmp);
+        get_infos_from_map2(tmp, global);
         j++;
     }
 }
