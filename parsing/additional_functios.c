@@ -1,0 +1,63 @@
+#include "cub3d.h"
+
+void free_global(t_global *global)
+{
+	if(global->real_map)
+        ft_doublepointerfree(global->real_map);
+	if(global->map)
+        ft_doublepointerfree(global->map);
+	if(global->no)
+        free(global->no);
+	if(global->so)
+        free(global->so);
+	if(global->we)
+        free(global->we);
+	if(global->ea)
+        free(global->ea);
+	if(global->f)
+        free(global->f);
+	if(global->c)
+        free(global->c);
+    free(global);
+}
+
+size_t	ft_countwords(char *s, char c)
+{
+	size_t	count;
+	size_t	i;
+
+	count = 0;
+	i = 0;
+	while (*(s + i))
+	{
+		if (*(s + i) != c)
+		{
+			count++;
+			while (*(s + i) && *(s + i) != c)
+				i++;
+		}
+		else if (*(s + i) == c)
+			i++;
+	}
+	return (count);
+}
+
+size_t	ft_getwordlen(char *s, char c)
+{
+	size_t	i;
+
+	i = 0;
+	while (*(s + i) && *(s + i) != c)
+		i++;
+	return (i);
+}
+
+void	ft_freearray(size_t i, char **array)
+{
+	while (i > 0)
+	{
+		i--;
+		free(*(array + i));
+	}
+	free(array);
+}
