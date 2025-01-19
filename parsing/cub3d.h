@@ -23,8 +23,7 @@ typedef struct s_elements
 typedef struct s_global
 {
 	char			**map;
-    char **tmp;
-
+    char			**tmp;
 	char			**real_map;
 	char			*no;
 	char			*so;

@@ -3,7 +3,7 @@ SO textures/file1.xpm
 WE textures/file2.xpm
 C 135,206,23
 EA textures/file3.xpm
-F 50,50,50
+F      50    ,     50,     5
 
 1111
 1111

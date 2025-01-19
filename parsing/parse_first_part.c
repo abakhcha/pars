@@ -2,6 +2,8 @@
 
 void free_global(t_global *global)
 {
+	if(global->real_map)
+        ft_doublepointerfree(global->real_map);
 	if(global->map)
         ft_doublepointerfree(global->map);
 	if(global->no)
@@ -19,7 +21,7 @@ void free_global(t_global *global)
     free(global);
 }
 
-size_t	ft_countwords(char *s, char c)//add it here
+size_t	ft_countwords(char *s, char c)
 {
 	size_t	count;
 	size_t	i;
@@ -800,7 +802,261 @@ void check_emptyline(t_global *global)
 	    i++;
 	}
 }
-    
+int	rgb_format(char *str)
+{
+	int	def;
+	int	i;
+
+	i = 1;
+	def = 0;
+	while (str[i])
+	{
+		if ((str[i] >= '0' && str[i] <= '9') || str[i] == ' ')
+			i++;
+		else if (str[i] == ','
+			&& ((str[i - 1] >= '0'
+					&& str[i - 1] <= '9')
+				|| str[i - 1] == ' '))
+		{
+			def += 1;
+			i++;
+		}
+		else
+			break ;
+	}
+	if (str[i] == '\0' && def == 2)
+		return (1);
+	return (-1);
+}
+// void check_rgb_format(t_global *global)
+// {
+// 	char **tmp1;
+// 	int i;
+// 	char **tmp2;
+
+// 	i = 0;
+// 	if(rgb_format(global->c + 1) == -1)
+// 		error_print("Error\nCheck ur rgb format");
+// 	tmp1 = ft_split(global->c + 1 , ',');
+// 	while(tmp1[i])
+// 	{
+// 		if(ft_atoi(tmp1[i]) > 255)
+// 			error_print("Error\nCheck ur rgb");
+// 		tmp2 = ft_split(tmp1[i], ' ');
+// 		if(ft_doublepointerlen(tmp2) != 1)
+// 		{
+// 			error_print("Error\nCheck ur rgb format");
+// 		}
+// 		i++;
+// 	}
+// }
+void check_rgb_format(t_global *global)
+{
+    char **tmp1;
+    int i;
+    char **tmp2;
+    i = 0;
+
+    if (rgb_format(global->c + 1) == -1)
+	{
+		free_global(global);
+        error_print("Error\nCheck your RGB format");
+	}
+    tmp1 = ft_split(global->c + 1, ',');
+    while (tmp1[i])
+    {
+        if (ft_atoi(tmp1[i]) > 255)
+        {
+            ft_doublepointerfree(tmp1);
+            error_print("Error\nCheck your RGB values");
+        }
+        tmp2 = ft_split(tmp1[i], ' ');
+        if (!tmp2)
+        {
+            ft_doublepointerfree(tmp1);
+            error_print("Error\nMemory allocation failed");
+        }
+        if (ft_doublepointerlen(tmp2) != 1)
+        {
+            ft_doublepointerfree(tmp2);
+            ft_doublepointerfree(tmp1);
+            error_print("Error\nCheck your RGB format");
+        }
+        ft_doublepointerfree(tmp2);
+        i++;
+    }
+    ft_doublepointerfree(tmp1);
+}
+
+
+// void check_rgb_format1(t_global *global)
+// {
+// 	char **tmp1;
+// 	int i;
+// 	char **tmp2;
+
+// 	i = 0;
+// 	if(rgb_format(global->f + 1) == -1)
+// 		error_print("Error\nCheck ur rgb format");
+// 	tmp1 = ft_split(global->f + 1 , ',');
+// 	while(tmp1[i])
+// 	{
+// 		if(ft_atoi(tmp1[i]) > 255)
+// 			error_print("Error\nCheck ur rgb");
+// 		tmp2 = ft_split(tmp1[i], ' ');
+// 		if(ft_doublepointerlen(tmp2) != 1)
+// 		{
+// 			error_print("Error\nCheck ur rgb format");
+// 		}
+// 		i++;
+// 	}
+// }
+
+void check_rgb_format1(t_global *global)
+{
+    char **tmp1;
+    int i;
+    char **tmp2;
+    i = 0;
+
+    if (rgb_format(global->f + 1) == -1)
+	{
+		free_global(global);
+        error_print("Error\nCheck your RGB format");
+	}
+    tmp1 = ft_split(global->f + 1, ',');
+    while (tmp1[i])
+    {
+        if (ft_atoi(tmp1[i]) > 255)
+        {
+            ft_doublepointerfree(tmp1);
+            error_print("Error\nCheck your RGB values");
+        }
+        tmp2 = ft_split(tmp1[i], ' ');
+        if (!tmp2)
+        {
+            ft_doublepointerfree(tmp1);
+            error_print("Error\nMemory allocation failed");
+        }
+        if (ft_doublepointerlen(tmp2) != 1)
+        {
+            ft_doublepointerfree(tmp2);
+            ft_doublepointerfree(tmp1);
+            error_print("Error\nCheck your RGB format");
+        }
+        ft_doublepointerfree(tmp2);
+        i++;
+    }
+    ft_doublepointerfree(tmp1);
+}
+
+void	store_rgb(t_global *global)
+{
+	char	**tmp;
+
+	tmp = ft_split(global->c + 1, ',');
+	global->ceiling_red = ft_atoi(tmp[0]);
+	global->ceiling_green = ft_atoi(tmp[1]);
+	global->ceiling_blue = ft_atoi(tmp[2]);
+	ft_doublepointerfree(tmp);
+	tmp = ft_split(global->f + 1, ',');
+	global->floor_red = ft_atoi(tmp[0]);
+	global->floor_green = ft_atoi(tmp[1]);
+	global->floor_blue = ft_atoi(tmp[2]);
+	ft_doublepointerfree(tmp);
+}
+
+void	check_for_textures_extension(t_global *global)
+{
+	if (ft_strncmp(global->so + ft_strlen(global->so) - 4, ".xpm", 4) != 0)
+	{
+		free_global(global);
+		error_print("Error\nSO texture must be a .xpm file\n");
+	}
+	if (ft_strncmp(global->no + ft_strlen(global->no) - 4, ".xpm", 4) != 0)
+	{
+		free_global(global);
+		error_print("Error\nNO texture must be a .xpm file\n");
+	}
+	if (ft_strncmp(global->we + ft_strlen(global->we) - 4, ".xpm", 4) != 0)
+	{
+		free_global(global);
+		error_print("Error\nWE texture must be a .xpm file\n");
+	}
+	if (ft_strncmp(global->ea + ft_strlen(global->ea) - 4, ".xpm", 4) != 0)
+	{
+		free_global(global);
+		error_print("Error\nEA texture must be a .xpm file\n");
+	}
+}
+
+void	check_textures_extention(t_global *global)
+{
+	if (open(global->no, O_RDWR) == -1)
+	{
+		free_global(global);
+		error_print("Error\ncheck ur textures files\n");
+	}
+	else if (open(global->so, O_RDWR) == -1)
+	{
+		free_global(global);
+		error_print("Error\ncheck ur textures files\n");
+	}
+	else if (open(global->we, O_RDWR) == -1)
+	{
+		free_global(global);
+		error_print("Error\ncheck ur textures files\n");
+	}
+	else if (open(global->ea, O_RDWR) == -1)
+	{
+		free_global(global);
+		error_print("Error\ncheck ur textures files\n");
+	}
+}
+
+void check_extentions_format(t_global *global)
+{
+	char **tmp;
+
+	tmp = ft_split(global->no,' ');
+	if(ft_doublepointerlen(tmp)!= 2)
+	{
+		ft_doublepointerfree(tmp);
+		free_global(global);
+		error_print("Error\ncheck your elements!");
+	}
+	ft_doublepointerfree(tmp);
+	tmp = ft_split(global->so,' ');
+	if(ft_doublepointerlen(tmp)!= 2)
+	{
+		free_global(global);
+		ft_doublepointerfree(tmp);
+		error_print("Error\ncheck your elements!");
+	}
+	ft_doublepointerfree(tmp);
+}
+
+void check_extentions_format2(t_global *global)
+{
+	char **tmp;
+
+	tmp = ft_split(global->we,' ');
+	if(ft_doublepointerlen(tmp)!= 2)
+	{
+		ft_doublepointerfree(tmp);
+		free_global(global);
+		error_print("Error\ncheck your elements!");
+	}
+	ft_doublepointerfree(tmp);
+	tmp = ft_split(global->ea,' ');
+	if(ft_doublepointerlen(tmp)!= 2)
+	{
+		ft_doublepointerfree(tmp);
+		free_global(global);
+		error_print("Error\ncheck your elements!");
+	}
+	ft_doublepointerfree(tmp);
+}
 
 void parse_first_part(t_global *global, int fd)
 {    
@@ -808,6 +1064,11 @@ void parse_first_part(t_global *global, int fd)
 	global->map = fill_map(fd);
 	init(global);
 	get_infos_from_map(global->map, global);
+	check_extentions_format(global);
+	check_extentions_format2(global);
+	check_rgb_format(global);
+	check_rgb_format1(global);
+	store_rgb(global);
     check_emptymap(global);
     check_emptymap2(global);
     get_realmap(global,map_size(global));
@@ -815,6 +1076,10 @@ void parse_first_part(t_global *global, int fd)
     check_emptyline(global);
     check_walls(global);
     player_exists(global);
+	check_for_textures_extension(global);
+	// check_for_textures_extension2(global);
+	check_textures_extention(global);
+	exit(1);
     while(global->real_map[j])
     {
         printf("%s\n",global->real_map[j]);
@@ -825,7 +1090,7 @@ void parse_first_part(t_global *global, int fd)
         // printf("==%d==\n",ft_strncmp(global->real_map[0], "", 1));
         // j++;
     // }
-    exit(1);
+    // exit(1);
 	// get_specified_data(s_map);
 	// skip_useless_data(s_map);
 	// check_for_max_255(s_map->f, s_map->c_p);
